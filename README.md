@@ -35,3 +35,9 @@ python3 -c "import joblib; m=joblib.load('model.pkl'); print(m)"
 ````
 it should show RandomForestClassifier()
 and to see plot click the png from the vs code
+
+
+to see the top prioritized unique test case:
+````bash
+python3 cluster_tests.py
+````
