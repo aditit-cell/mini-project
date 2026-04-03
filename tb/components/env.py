@@ -6,15 +6,23 @@ from tb.components.monitor import ALUMonitor
 from tb.components.scoreboard import ALUScoreboard
 
 #  ML COVERAGE HELPERS
+def to_signed(x):
+    if x >= 2**31:
+        return x - 2**32
+    return x
+
+
 def classify_operand(x):
+    x = to_signed(x)   # 🔥 IMPORTANT FIX
+
     if x == 0:
         return "ZERO"
+    elif x < 0:
+        return "NEG"
     elif 0 < x < 10:
         return "SMALL"
-    elif x >= 10:
-        return "LARGE"
     else:
-        return "NEG"
+        return "LARGE"
 
 
 def get_bin(opcode, a, b):
@@ -33,7 +41,7 @@ class CoverageExport(uvm_analysis_export):
 
     def start_of_simulation_phase(self):
         os.makedirs("results", exist_ok=True)
-        self.log_file = open("results/coverage_log.csv", "w", newline="")
+        self.log_file = open("results/coverage_log.csv", "a", newline="")
         self.writer   = csv.writer(self.log_file)
 
         # UPDATED CSV HEADER
